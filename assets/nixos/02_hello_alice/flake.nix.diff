@@ -1,0 +1,28 @@
+--- old
++++ new
+@@ -13,6 +13,25 @@
+           nix.settings.experimental-features = [ "nix-command" "flakes" ];
+           nixpkgs.hostPlatform.system = "x86_64-linux";
+           system.stateVersion = "25.11";
++
++          users.users.alice = {
++            isNormalUser = true;
++            initialPassword = "bob";
++          };
++
++          services.getty.autologinUser = "alice";
++
++          security.sudo.extraRules = [
++            {
++              users = [ "alice" ];
++              commands = [
++                {
++                  command = "ALL";
++                  options = [ "NOPASSWD" ];
++                }
++              ];
++            }
++          ];
+         }
+         {
+           virtualisation.vmVariant = {

@@ -1,0 +1,16 @@
+--- old
++++ new
+@@ -26,5 +26,13 @@
+         }
+       ];
+     };
++
++    apps.x86_64-linux = rec {
++      default = obsidian;
++      obsidian = {
++        type = "app";
++        program = "${self.nixosConfigurations.obsidian.config.system.build.vm}/bin/run-nixos-vm";
++      };
++    };
+   };
+ }

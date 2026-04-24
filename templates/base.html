@@ -1,0 +1,203 @@
+{% extends "zolanight/templates/base.html" %}
+
+{% block extra_head %}
+<style>
+  .code-tabs .code-tab-bar {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin-bottom: 0;
+  }
+  .code-tabs .code-tab-btn {
+    padding: 6px 18px;
+    border: 1px solid #555;
+    border-bottom-width: 2px;
+    background: transparent;
+    color: var(--orange-color);
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.95em;
+    opacity: 0.55;
+  }
+  .code-tabs .code-tab-btn:hover {
+    opacity: 0.85;
+  }
+  .code-tabs .code-tab-btn.active {
+    opacity: 1;
+    border-bottom-color: currentColor;
+  }
+  .code-tabs pre {
+    margin-top: 0;
+    margin-left: -0.9em;
+    margin-right: -0.9em;
+    border-top: 1px solid var(--cyan-color);
+  }
+  [class^="markdown-alert-"]::before {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.25em;
+  }
+  .markdown-alert-note {
+    border-left-color: #2f81f7;
+  }
+  .markdown-alert-note::before {
+    content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' width='16' height='16' fill='%232f81f7'%3E%3Cpath d='M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z'%3E%3C/path%3E%3C/svg%3E") " Note";
+    color: #2f81f7;
+  }
+  .markdown-alert-tip {
+    border-left-color: #3fb950;
+  }
+  .markdown-alert-tip::before {
+    content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' width='16' height='16' fill='%233fb950'%3E%3Cpath d='M8 1.5c-2.363 0-4 1.69-4 3.75 0 .984.424 1.625.984 2.304l.214.253c.223.264.47.556.673.848.284.411.537.896.621 1.49a.75.75 0 0 1-1.484.211c-.04-.282-.163-.547-.37-.847a8.456 8.456 0 0 0-.542-.68c-.084-.1-.173-.205-.268-.32C3.201 7.75 2.5 6.766 2.5 5.25 2.5 2.31 4.863 0 8 0s5.5 2.31 5.5 5.25c0 1.516-.701 2.5-1.328 3.259-.095.115-.184.22-.268.319-.207.245-.383.453-.541.681-.208.3-.33.565-.37.847a.751.751 0 0 1-1.485-.212c.084-.593.337-1.078.621-1.489.203-.292.45-.584.673-.848.075-.088.147-.173.213-.253.561-.679.985-1.32.985-2.304 0-2.06-1.637-3.75-4-3.75ZM5.75 12h4.5a.75.75 0 0 1 0 1.5h-4.5a.75.75 0 0 1 0-1.5ZM6 15.25a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 0 1.5h-2.5a.75.75 0 0 1-.75-.75Z'%3E%3C/path%3E%3C/svg%3E") " Tip";
+    color: #3fb950;
+  }
+  .markdown-alert-important {
+    border-left-color: #a371f7;
+  }
+  .markdown-alert-important::before {
+    content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' width='16' height='16' fill='%23a371f7'%3E%3Cpath d='M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z'%3E%3C/path%3E%3C/svg%3E") " Important";
+    color: #a371f7;
+  }
+  .markdown-alert-warning {
+    border-left-color: #d29922;
+  }
+  .markdown-alert-warning::before {
+    content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' width='16' height='16' fill='%23d29922'%3E%3Cpath d='M6.457 1.047c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0 1 14.082 15H1.918a1.75 1.75 0 0 1-1.543-2.575Zm1.763.707a.25.25 0 0 0-.44 0L1.698 13.132a.25.25 0 0 0 .22.368h12.164a.25.25 0 0 0 .22-.368Zm.53 3.996v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z'%3E%3C/path%3E%3C/svg%3E") " Warning";
+    color: #d29922;
+  }
+  .markdown-alert-caution {
+    border-left-color: #f85149;
+  }
+  .markdown-alert-caution::before {
+    content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' width='16' height='16' fill='%23f85149'%3E%3Cpath d='M4.47.22A.749.749 0 0 1 5 0h6c.199 0 .389.079.53.22l4.25 4.25c.141.14.22.331.22.53v6a.749.749 0 0 1-.22.53l-4.25 4.25A.749.749 0 0 1 11 16H5a.749.749 0 0 1-.53-.22L.22 11.53A.749.749 0 0 1 0 11V5c0-.199.079-.389.22-.53Zm.84 1.28L1.5 5.31v5.38l3.81 3.81h5.38l3.81-3.81V5.31L10.69 1.5ZM8 4a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 8 4Zm0 8a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z'%3E%3C/path%3E%3C/svg%3E") " Caution";
+    color: #f85149;
+  }
+  :not(pre) > code {
+    background-color: #00000080;
+    color: #89b4fa;
+    padding: 0 4px;
+    border-radius: 3px;
+  }
+  details {
+    border: 1px solid var(--cyan-color);
+    border-radius: 5px;
+    background-color: rgba(255, 255, 255, 0.01);
+    margin: 1em 0;
+    overflow: hidden;
+  }
+  details pre {
+    border: none;
+    border-radius: 0;
+  }
+  details[open] > .code-tabs {
+    padding: 0.3em 0.6em;
+  }
+  summary {
+    padding: 0.6em 0.9em;
+    cursor: pointer;
+    color: var(--orange-color);
+    background-color: #00000080;
+  }
+  summary:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+  }
+  details[open] > summary {
+    border-bottom: 1px solid var(--cyan-color);
+  }
+  details > :not(summary):not(pre) {
+    padding: 0 0.9em;
+    border: none;
+  }
+  details[open] > summary + * {
+    margin-top: 0;
+    padding-top: 0.6em;
+  }
+  details[open] > :last-child {
+    margin-bottom: 0;
+    padding-bottom: 0.6em;
+  }
+  .aside {
+    position: relative;
+    border-left: 3px solid var(--aside-color);
+    padding: 0.6em 0.9em;
+    margin: 1em 0;
+    background-color: rgba(255, 255, 255, 0.03);
+    font-style: italic;
+  }
+  .aside-speaker {
+    position: absolute;
+    right: 100%;
+    top: 0.6em;
+    margin-right: 0.6em;
+    font-weight: 600;
+    font-style: normal;
+    color: var(--aside-color);
+    white-space: nowrap;
+  }
+  .aside-right {
+    border-left: none;
+    border-right: 3px solid var(--aside-color);
+    text-align: right;
+  }
+  .aside-right .aside-speaker {
+    right: auto;
+    left: 100%;
+    margin-right: 0;
+    margin-left: 0.6em;
+  }
+  @media (max-width: 900px) {
+    .aside-speaker {
+      position: static;
+      margin: 0 0 0.3em 0;
+    }
+  }
+  .aside-body > :first-child { margin-top: 0; }
+  .aside-body > :last-child { margin-bottom: 0; }
+  .aside-blue    { --aside-color: var(--blue-color); }
+  .aside-cyan    { --aside-color: var(--cyan-color); }
+  .aside-green   { --aside-color: var(--green-color); }
+  .aside-orange  { --aside-color: var(--orange-color); }
+  .aside-red     { --aside-color: var(--red-color); }
+  .aside-yellow  { --aside-color: var(--yellow-color); }
+  .aside-magenta { --aside-color: var(--magenta-color); }
+  .aside-gray { --aside-color: var(--magenta-gray); }
+</style>
+{% endblock extra_head %}
+
+{% block content %}
+<script>
+  document.querySelectorAll('.code-tabs').forEach(function(container) {
+    var pres = Array.from(container.querySelectorAll('pre'));
+    if (pres.length <= 1) return;
+
+    var namesAttr = container.getAttribute('data-names');
+    var customNames = namesAttr ? JSON.parse(namesAttr) : [];
+
+    var tabBar = document.createElement('div');
+    tabBar.className = 'code-tab-bar';
+
+    pres.forEach(function(pre, index) {
+      var code = pre.querySelector('code');
+      var lang = customNames[index] || (code && code.getAttribute('data-lang')) || ('Tab ' + (index + 1));
+
+      var button = document.createElement('button');
+      button.textContent = lang;
+      button.className = 'code-tab-btn' + (index === 0 ? ' active' : '');
+      if (index !== 0) pre.style.display = 'none';
+
+      button.addEventListener('click', function() {
+        tabBar.querySelectorAll('.code-tab-btn').forEach(function(btn) {
+          btn.classList.remove('active');
+        });
+        pres.forEach(function(p) { p.style.display = 'none'; });
+        button.classList.add('active');
+        pre.style.display = '';
+      });
+
+      tabBar.appendChild(button);
+    });
+
+    container.insertBefore(tabBar, container.firstChild);
+  });
+</script>
+{% endblock content %}

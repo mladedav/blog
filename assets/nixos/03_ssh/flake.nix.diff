@@ -1,0 +1,44 @@
+--- old
++++ new
+@@ -17,6 +17,7 @@
+           users.users.alice = {
+             isNormalUser = true;
+             initialPassword = "bob";
++            openssh.authorizedKeys.keys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAII7L/RkBxZ06hBAhcOEPAr76P00sEDVhh0bWcvwnkCak mladedav@silver" ];
+           };
+ 
+           services.getty.autologinUser = "alice";
+@@ -32,6 +33,19 @@
+               ];
+             }
+           ];
++
++          services.openssh = {
++            enable = true;
++            ports = [ 22 ];
++            settings = {
++              AllowUsers = [ "alice" ];
++              UseDns = false;
++              X11Forwarding = false;
++              PermitRootLogin = "no";
++            };
++          };
++
++          networking.firewall.allowedTCPPorts = [ 22 ];
+         }
+         {
+           virtualisation.vmVariant = {
+@@ -40,6 +54,13 @@
+               cores = 2;
+               diskSize = 8192;
+               graphics = false;
++              forwardPorts = [
++                {
++                  from = "host";
++                  host.port = 2222;
++                  guest.port = 22;
++                }
++              ];
+             };
+           };
+         }

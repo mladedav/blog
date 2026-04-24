@@ -1,0 +1,3 @@
+{% macro render(names, body_html) %}
+<div class="code-tabs"{% if names %} data-names='{{ names | json_encode | safe }}'{% endif %}>{{ body_html | safe }}</div>
+{% endmacro render %}

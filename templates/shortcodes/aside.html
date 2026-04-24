@@ -1,0 +1,11 @@
+{% set side = side | default(value = "left") %}
+{% set speaker_name = speaker | capitalize %}
+{% set name = name | default(value = "Mr. " ~ speaker_name) %}
+<aside class="aside aside-{{ speaker }}{% if side == "right" %} aside-right{% endif %}">
+  <div class="aside-speaker">{% if side == "right" %}&lt; [ {{ name }} ]{% else %}[ {{ name }} ]&gt;{% endif %}</div>
+  <div class="aside-body">
+
+{{ body | markdown | safe }}
+
+  </div>
+</aside>

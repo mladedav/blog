@@ -1,0 +1,56 @@
+--- old
++++ new
+@@ -3,9 +3,10 @@
+ 
+   inputs = {
+     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
++    deploy-rs.url = "github:serokell/deploy-rs";
+   };
+ 
+-  outputs = { self, nixpkgs, ... }@inputs:
++  outputs = { self, nixpkgs, deploy-rs, ... }@inputs:
+   {
+     nixosConfigurations.obsidian = nixpkgs.lib.nixosSystem {
+       modules = [
+@@ -19,6 +20,7 @@
+             initialPassword = "bob";
+             openssh.authorizedKeys.keys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAII7L/RkBxZ06hBAhcOEPAr76P00sEDVhh0bWcvwnkCak mladedav@silver" ];
+           };
++          nix.settings.trusted-users = [ "root" "@wheel" "alice" ];
+ 
+           services.getty.autologinUser = "alice";
+ 
+@@ -64,9 +66,33 @@
+             };
+           };
+         }
++        {
++          boot.loader.grub.enable = false;
++          fileSystems."/" = {
++            device = "/dev/disk/by-uuid/00952320-b7db-4025-867a-12a635dbde63";
++            fsType = "ext4";
++          };
++        }
+       ];
+     };
+ 
++    deploy = {
++      nodes = {
++        obsidian-vm = {
++          hostname = "127.0.0.1";
++          sshOpts = [ "-p" "2222" "-o" "UserKnownHostsFile=/dev/null" "-o" "StrictHostKeyChecking=no" ];
++          profiles = {
++            system = {
++              sshUser = "alice";
++              user = "root";
++              path =
++                deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.obsidian;
++            };
++          };
++        };
++      };
++    };
++
+     apps.x86_64-linux = rec {
+       default = obsidian;
+       obsidian = {

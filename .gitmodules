@@ -1,0 +1,3 @@
+[submodule "themes/zolanight"]
+	path = themes/zolanight
+	url = git@github.com:mladedav/zolanight.git

@@ -1,0 +1,31 @@
+# The URL the site will be built for
+base_url = "https://blog.mladedav.eu"
+title = "mladedav"
+
+theme = "zolanight"
+
+compile_sass = true
+
+generate_feeds = true
+feed_limit = 10
+feed_filenames = ["atom.xml"]
+
+build_search_index = false
+
+taxonomies = [{ name = "tags", feed = true }]
+
+[markdown]
+
+github_alerts = true
+
+[markdown.highlighting]
+theme = "catppuccin-mocha"
+
+[extra]
+mode = "blog"
+
+[extra.zolanight]
+theme = "tokyonight"
+home_list_latest_blog_posts = true
+google_analytics_id = ""
+ko_fi_url = ""

@@ -1,0 +1,57 @@
+{
+  description = "A simple NixOS flake";
+
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+  };
+
+  outputs = { self, nixpkgs, ... }@inputs:
+  {
+    nixosConfigurations.obsidian = nixpkgs.lib.nixosSystem {
+      modules = [
+        {
+          nix.settings.experimental-features = [ "nix-command" "flakes" ];
+          nixpkgs.hostPlatform.system = "x86_64-linux";
+          system.stateVersion = "25.11";
+
+          users.users.alice = {
+            isNormalUser = true;
+            initialPassword = "bob";
+          };
+
+          services.getty.autologinUser = "alice";
+
+          security.sudo.extraRules = [
+            {
+              users = [ "alice" ];
+              commands = [
+                {
+                  command = "ALL";
+                  options = [ "NOPASSWD" ];
+                }
+              ];
+            }
+          ];
+        }
+        {
+          virtualisation.vmVariant = {
+            virtualisation = {
+              memorySize = 2048;
+              cores = 2;
+              diskSize = 8192;
+              graphics = false;
+            };
+          };
+        }
+      ];
+    };
+
+    apps.x86_64-linux = rec {
+      default = obsidian;
+      obsidian = {
+        type = "app";
+        program = "${self.nixosConfigurations.obsidian.config.system.build.vm}/bin/run-nixos-vm";
+      };
+    };
+  };
+}
