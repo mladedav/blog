@@ -1,3 +1,6 @@
 **/flake.lock
-**/**/*.qcow2
+**/*.qcow2
 **/result
+**/*.img
+**/boot/
+**/root/
