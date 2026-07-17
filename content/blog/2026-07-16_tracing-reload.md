@@ -12,6 +12,7 @@ tl;dr
 - I built an alternative to `tracing_subscriber::reload::Layer` because it had issues.
 - This version panics less and hopefully does more of what users want.
 - It leaks memory though.
+- The crate is published [here](https://crates.io/crates/tracing-reload) and code is [here](https://github.com/mladedav/tracing-reload).
 ---
 
 ## Upstream reload layer
