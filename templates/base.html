@@ -161,6 +161,16 @@
   .aside-yellow  { --aside-color: var(--yellow-color); }
   .aside-magenta { --aside-color: var(--magenta-color); }
   .aside-gray { --aside-color: var(--magenta-gray); }
+  /* Separator before the footnote section (only the first footnote gets the line) */
+  :not(.footnote-definition) + .footnote-definition {
+    margin-top: 2em;
+    padding-top: 1.5em;
+    border-top: 1px solid var(--cyan-color);
+  }
+  .footnote-backlink {
+    text-decoration: none;
+    margin-left: 0.4em;
+  }
 </style>
 {% endblock extra_head %}
 
@@ -198,6 +208,22 @@
     });
 
     container.insertBefore(tabBar, container.firstChild);
+  });
+
+  // Footnotes: tag each reference so the definition can link back to it.
+  document.querySelectorAll('.footnote-reference a').forEach(function(link) {
+    var number = link.getAttribute('href').slice(1);
+    link.parentElement.id = 'footnote-reference-' + number;
+  });
+  document.querySelectorAll('.footnote-definition').forEach(function(definition) {
+    if (!document.getElementById('footnote-reference-' + definition.id)) return;
+    var backlink = document.createElement('a');
+    backlink.href = '#footnote-reference-' + definition.id;
+    backlink.className = 'footnote-backlink';
+    backlink.setAttribute('aria-label', 'Back to text');
+    backlink.textContent = '↩';
+    var target = definition.querySelector('p:last-of-type') || definition;
+    target.appendChild(backlink);
   });
 </script>
 {% endblock content %}
